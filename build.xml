@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Ant build file for SliderDemo project.
+-->
+<project name="SliderDemo" basedir="." default="run">
+
+    <!-- Define build locations -->
+    <property name="build.dir" location="build" />
+    <property name="src.dir"   location="src" />
+
+    <!-- Define build properties -->
+    <property name="project.jar"  value="${ant.project.name}.jar" />
+    <property name="project.zip"  value="${ant.project.name}.zip" />
+    <property name="main.class"   value="slider.RangeSliderDemo" />
+
+    <!-- Define classpath for compile -->
+    <path id="compile.classpath">
+        <pathelement path="${build.dir}" />
+    </path>
+
+    <target name="init" description="Initializes build">
+        <mkdir dir="${build.dir}" />
+    </target>
+
+    <target name="clean" depends="init" description="Deletes build products">
+        <!-- Delete compiled classes -->
+        <delete includeEmptyDirs="true" failonerror="false">
+            <fileset dir="${build.dir}" includes="**/*" />
+        </delete>
+        
+        <!-- Delete distribution files -->
+        <delete failonerror="false">
+            <fileset dir="${basedir}">
+                <include name="${project.jar}" /> 
+                <include name="${project.zip}" /> 
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="compile" depends="init" description="Compiles all classes">
+        <!-- Compile all java classes -->
+        <javac destdir="${build.dir}" 
+            srcdir="${src.dir}" 
+            debug="true" 
+            deprecation="true" >
+            <classpath refid="compile.classpath" />
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="Creates executable jar">
+        <!-- Define manifest attributes -->
+        <property name="manifest.mainclass" value="${main.class}" />
+        <property name="manifest.classpath" value="${project.jar}" />
+
+        <!-- Create executable jar file --> 
+        <jar jarfile="${project.jar}"
+            basedir="${build.dir}"
+            compress="true" >
+            <manifest>
+              	<attribute name="Main-Class" value="${manifest.mainclass}" />
+              	<attribute name="Class-Path" value="${manifest.classpath}" />
+           	</manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="compile" description="Runs demo application">
+        <!-- Execute application -->
+        <java classname="${main.class}"
+            fork="true"
+            spawn="true"> 
+            <classpath refid="compile.classpath" />
+        </java>
+    </target>
+    
+    <target name="dist" depends="jar" description="Creates project archive">
+        <!-- Create zip file containing source and build files -->
+        <zip destfile="${project.zip}" compress="true">
+            <zipfileset dir="${src.dir}" prefix="src" 
+                includes="**/*.java" />
+            <fileset file="${project.jar}" />
+            <fileset file="build.xml" />
+        	<fileset file="LICENSE.txt" />
+        </zip>
+    </target>
+
+</project>

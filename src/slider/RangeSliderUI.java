@@ -395,7 +395,7 @@ class RangeSliderUI extends BasicSliderUI {
             // otherwise check the position of the lower thumb first.
             boolean lowerPressed = false;
             boolean upperPressed = false;
-            if (upperThumbSelected) {
+            if (upperThumbSelected || slider.getMinimum() == slider.getValue()) {
                 if (upperThumbRect.contains(currentMouseX, currentMouseY)) {
                     upperPressed = true;
                 } else if (thumbRect.contains(currentMouseX, currentMouseY)) {

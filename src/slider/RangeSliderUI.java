@@ -51,7 +51,7 @@ class RangeSliderUI extends BasicSliderUI {
      * Installs this UI delegate on the specified component. 
      */
     @Override
-    public void installUI(final JComponent c) {
+    public void installUI(JComponent c) {
         upperThumbRect = new Rectangle();
         super.installUI(c);
         c.getInputMap().put(KeyStroke.getKeyStroke(' '), "toggleLowHigh");
@@ -60,7 +60,7 @@ class RangeSliderUI extends BasicSliderUI {
             public void actionPerformed(ActionEvent e) {
                 if (!lowerDragging && !upperDragging) {
                     upperThumbSelected = !upperThumbSelected;
-                    c.repaint();
+                    slider.repaint();
                 }
             }
         });
@@ -389,6 +389,24 @@ class RangeSliderUI extends BasicSliderUI {
      * Listener to handle mouse movements in the slider track.
      */
     public class RangeTrackListener extends TrackListener {
+        
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (!slider.isEnabled()) {
+                return;
+            }
+            if (upperThumbSelected) {
+                if (thumbRect.contains(e.getX(), e.getY())) {
+                    upperThumbSelected = false;
+					slider.repaint();
+                }
+            } else {
+                if (upperThumbRect.contains(e.getX(), e.getY())) {
+                    upperThumbSelected = true;
+					slider.repaint();
+                }
+            }
+        }
         
         @Override
         public void mousePressed(MouseEvent e) {

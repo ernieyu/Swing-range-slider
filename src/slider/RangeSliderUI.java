@@ -205,7 +205,10 @@ class RangeSliderUI extends BasicSliderUI {
             g.translate(trackBounds.x, trackBounds.y + cy);
             
             // Draw selected range.
-            g.setColor(rangeColor);
+            if (slider.isEnabled())
+                g.setColor(rangeColor);
+            else
+                g.setColor(new Color(0, 127, 0));
             for (int y = 0; y <= 3; y++) {
                 g.drawLine(lowerX - trackBounds.x, y, upperX - trackBounds.x, y);
             }
@@ -228,7 +231,10 @@ class RangeSliderUI extends BasicSliderUI {
             g.translate(trackBounds.x + cx, trackBounds.y);
 
             // Draw selected range.
-            g.setColor(rangeColor);
+            if (slider.isEnabled())
+                g.setColor(rangeColor);
+            else
+                g.setColor(new Color(0, 127, 0));
             for (int x = 0; x <= 3; x++) {
                 g.drawLine(x, lowerY - trackBounds.y, x, upperY - trackBounds.y);
             }
@@ -267,11 +273,19 @@ class RangeSliderUI extends BasicSliderUI {
             RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.translate(knobBounds.x, knobBounds.y);
 
-        g2d.setColor(Color.CYAN);
-        g2d.fill(thumbShape);
+        if (slider.isEnabled()) {
+            g2d.setColor(Color.CYAN);
+            g2d.fill(thumbShape);
 
-        g2d.setColor(Color.BLUE);
-        g2d.draw(thumbShape);
+            g2d.setColor(Color.BLUE);
+            g2d.draw(thumbShape);
+        } else {
+            g2d.setColor(new Color(0, 127, 127));
+            g2d.fill(thumbShape);
+
+            g2d.setColor(Color.BLACK);
+            g2d.draw(thumbShape);
+        }
         
         // Dispose graphics.
         g2d.dispose();
@@ -296,11 +310,19 @@ class RangeSliderUI extends BasicSliderUI {
             RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.translate(knobBounds.x, knobBounds.y);
 
-        g2d.setColor(Color.PINK);
-        g2d.fill(thumbShape);
+        if (slider.isEnabled()) {
+            g2d.setColor(Color.PINK);
+            g2d.fill(thumbShape);
 
-        g2d.setColor(Color.RED);
-        g2d.draw(thumbShape);
+            g2d.setColor(Color.RED);
+            g2d.draw(thumbShape);
+        } else {
+            g2d.setColor(new Color(127, 87, 87));
+            g2d.fill(thumbShape);
+
+            g2d.setColor(Color.BLACK);
+            g2d.draw(thumbShape);
+        }
 
         // Dispose graphics.
         g2d.dispose();
@@ -398,12 +420,12 @@ class RangeSliderUI extends BasicSliderUI {
             if (upperThumbSelected) {
                 if (thumbRect.contains(e.getX(), e.getY())) {
                     upperThumbSelected = false;
-					slider.repaint();
+                    slider.repaint();
                 }
             } else {
                 if (upperThumbRect.contains(e.getX(), e.getY())) {
                     upperThumbSelected = true;
-					slider.repaint();
+                    slider.repaint();
                 }
             }
         }

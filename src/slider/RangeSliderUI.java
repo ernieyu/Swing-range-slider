@@ -7,11 +7,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JSlider;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -48,9 +51,19 @@ class RangeSliderUI extends BasicSliderUI {
      * Installs this UI delegate on the specified component. 
      */
     @Override
-    public void installUI(JComponent c) {
+    public void installUI(final JComponent c) {
         upperThumbRect = new Rectangle();
         super.installUI(c);
+        c.getInputMap().put(KeyStroke.getKeyStroke(' '), "toggleLowHigh");
+        c.getActionMap().put("toggleLowHigh", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!lowerDragging && !upperDragging) {
+                    upperThumbSelected = !upperThumbSelected;
+                    c.repaint();
+                }
+            }
+        });
     }
 
     /**
